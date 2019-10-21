@@ -1,7 +1,6 @@
 # event.py - functions to use eventbrite api
 import requests
 import json
-from eventbritexl import save_attendees
 
 # returns a list of attendees, handles pagination automatically
 def get_attendee_list(event_id:str, token:str, continuation:str=None):
@@ -28,11 +27,3 @@ def get_attendee_list(event_id:str, token:str, continuation:str=None):
                                           pagination["continuation"]))
 
     return att_list
-
-if __name__ == "__main__":
-    with open("options.json", "r") as file:
-        options = json.load(file)
-    token = options["api_key"]
-    event_id = options["event_id"]
-    att_list = get_attendee_list(event_id, token)
-    save_attendees(att_list, "attendees.xlsx")
