@@ -1,4 +1,4 @@
-# eventbritexl.py - saves eventbrite data to excel spreadsheets
+# eventbritexl.py - interact with eventbrite data in excel spreadsheets
 from openpyxl import Workbook
 
 def save_attendees(attendees:list, filename:str):
@@ -17,7 +17,8 @@ def save_attendees(attendees:list, filename:str):
         wp.cell(row = row, column=col).value = key
         col += 1
     for question in first_att["answers"]:
-        wp.cell(row=row, column=col).value = question["question"]
+        head = question["question"] + ":" + question["question_id"]
+        wp.cell(row=row, column=col).value = head
         ids.append(question["question_id"])
         col += 1
     col = 1
