@@ -5,6 +5,8 @@ import json
 from event import get_attendee_list
 from eventbritexl import save_attendees
 
+# TODO: cli for new methods
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-k", "--api_key",
