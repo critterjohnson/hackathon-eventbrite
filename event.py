@@ -233,6 +233,3 @@ def get_people_answered(event_id:str,
                    and answer["answer"].lower() == expected_answer.lower()]
 
     return answers
-
-if __name__ == "__main__":
-    print(get_duplicates("61404733210", "VNUD6FG27RWCRGXR4A3K"))
