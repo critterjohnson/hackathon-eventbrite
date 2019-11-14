@@ -96,19 +96,19 @@ def get_question_list(event_id:str,
 # passing a list of ids or texts gets all of the the questions
 # returns a 2d list
 # follow_up only works if there's only single followup questions
-def get_answers_for(event_id:str,
-                    token:str,
+def get_answers_for(attendees,
                     question_id=None,
                     question_text=None,
                     follow_up:bool=True,
-                    url:str=None):
+                    questions=None):
     if question_id is None and question_text is None:
-        return ValueError("must pass question_id or question_text")
+        raise ValueError("must pass question_id or question_text")
+    if follow_up and questions is None:
+        raise ValueError()
 
     if follow_up:
         # get a list of questions and map question id to follow up question ids (if they exist)
         # {question_id: (followup_choice, followup_id)}
-        questions = get_question_list(event_id, token, True, url=url)
         followups = {}
         for question in questions:
             for choice in question["choices"]:
@@ -116,7 +116,6 @@ def get_answers_for(event_id:str,
                     followups[question["id"]] = (choice["answer"]["text"], qid)
 
     # get attendees and map them so their email maps to answers (used for followup questions later)
-    attendees = get_attendee_list(event_id, token, url=url)
     answer_dict = {}
     for attendee in attendees:
         answer_dict[attendee["profile"]["email"]] = [answer for answer in attendee["answers"]]
@@ -169,34 +168,30 @@ def get_answers_for(event_id:str,
 
 
 # gets the number of people who answered something to a specific question
-def get_number_answered(event_id:str,
-                        token:str,
+def get_number_answered(attendees,
                         expected_answer:str,
                         question_id:str=None,
-                        question_text=None,
-                        url:str=None):
+                        question_text=None):
     if question_id is None and question_text is None:
-        return ValueError("must pass question_id or question_text")
+        raise ValueError("must pass question_id or question_text")
     if question_id is not None and question_text is not None:
-        return ValueError("pass only question_id or question_text, not both")
+        raise ValueError("pass only question_id or question_text, not both")
 
-    answers = get_answers_for(event_id, token, question_id, question_text, url=url)[0]
+    answers = get_answers_for(attendees, question_id, question_text)[0]
     # returns the number of people that answered as expected
     return len(list(filter(lambda s: s is not None and s.lower() == expected_answer.lower(), answers)))
 
 
 # returns the number of people who answered to each possible response
-def get_all_number_answered(event_id:str,
-                            token:str,
+def get_all_number_answered(attendees,
                             question_id:str=None,
-                            question_text:str=None,
-                            url:str=None):
+                            question_text:str=None):
     if question_id is None and question_text is None:
-        return ValueError("must pass question_id or question_text")
+        raise ValueError("must pass question_id or question_text")
     if question_id is not None and question_text is not None:
-        return ValueError("pass only question_id or question_text, not both")
+        raise ValueError("pass only question_id or question_text, not both")
 
-    answers = get_answers_for(event_id, token, question_id, question_text, url=url)[0]
+    answers = get_answers_for(attendees, question_id, question_text)[0]
     number_answers = {}
     for answer in answers:
         if answer not in number_answers.keys():
@@ -207,18 +202,15 @@ def get_all_number_answered(event_id:str,
 
 
 # gets all the people who answered something to a specific question
-def get_people_answered(event_id:str,
-                        token:str,
+def get_people_answered(attendees,
                         expected_answer:str,
                         question_id:str=None,
-                        question_text:str=None,
-                        url:str=None):
+                        question_text:str=None):
     if question_id is None and question_text is None:
-        return ValueError("must pass question_id or question_text")
+        raise ValueError("must pass question_id or question_text")
     if question_id is not None and question_text is not None:
-        return ValueError("pass only question_id or question_text, not both")
+        raise ValueError("pass only question_id or question_text, not both")
 
-    attendees = get_attendee_list(event_id, token, url=url)
     if question_id is not None:
         answers = [attendee for attendee in attendees 
                    for answer in attendee["answers"]

@@ -2,8 +2,8 @@
 import argparse
 import sys
 import json
-from event import get_attendee_list
-from eventbritexl import save_attendees
+from hackbi_eventbrite import get_attendee_list
+from hackbi_eventbrite import save_attendees
 
 # TODO: cli for new methods
 
