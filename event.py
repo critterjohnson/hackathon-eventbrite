@@ -59,6 +59,21 @@ def get_attendee_list(event_id:str, token:str, url:str=None):
     return att_list
 
 
+# returns a list of attendees with the same name
+def get_duplicates(event_id:str, token:str, url:str=None):
+    attendees = get_attendee_list(event_id, token, url)
+
+    names = []
+    dupes = []
+    for attendee in attendees:
+        name = (attendee["profile"]["first_name"], attendee["profile"]["last_name"])
+        if name not in names:
+            names.append(name)
+        else:
+            dupes.append(name)
+    return dupes
+
+
 # gets the list of questions associated with an event
 def get_question_list(event_id:str, 
                       token:str, 
@@ -218,3 +233,6 @@ def get_people_answered(event_id:str,
                    and answer["answer"].lower() == expected_answer.lower()]
 
     return answers
+
+if __name__ == "__main__":
+    print(get_duplicates("61404733210", "VNUD6FG27RWCRGXR4A3K"))
