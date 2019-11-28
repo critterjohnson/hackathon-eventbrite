@@ -104,7 +104,7 @@ def get_answers_for(attendees,
     if question_id is None and question_text is None:
         raise ValueError("must pass question_id or question_text")
     if follow_up and questions is None:
-        raise ValueError()
+        raise ValueError("in order to handle follow up questions a list of questions must be passed")
 
     if follow_up:
         # get a list of questions and map question id to follow up question ids (if they exist)
@@ -185,13 +185,19 @@ def get_number_answered(attendees,
 # returns the number of people who answered to each possible response
 def get_all_number_answered(attendees,
                             question_id:str=None,
-                            question_text:str=None):
+                            question_text:str=None,
+                            questions=None):
     if question_id is None and question_text is None:
         raise ValueError("must pass question_id or question_text")
     if question_id is not None and question_text is not None:
         raise ValueError("pass only question_id or question_text, not both")
 
-    answers = get_answers_for(attendees, question_id, question_text)[0]
+    if questions is not None:
+        follow_up = True
+    else:
+        follow_up = False
+
+    answers = get_answers_for(attendees, question_id, question_text, follow_up, questions)[0]
     number_answers = {}
     for answer in answers:
         if answer not in number_answers.keys():
