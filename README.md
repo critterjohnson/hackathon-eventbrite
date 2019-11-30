@@ -1,6 +1,9 @@
 # hackathon-eventbrite
 Some tools for using eventbrite, intended for HackBI
 
+## Eventbrite
+These methods interact with the eventbrite api. Whenever something returns a list of attendees, it returns the object returned by the eventbrite API (same is true of get_question_list, which returns a list of question objects from the API). Documentation for the eventbrite api can be found [here](https://www.eventbrite.com/platform/api#/reference/attendee)
+
 ## Installation
 Since it's not on PyPi (yet?), it has to be installed by cloning and going into the hackbi_eventbrite directory, and typing
 `pip install .`
