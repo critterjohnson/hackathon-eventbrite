@@ -59,21 +59,6 @@ def get_attendee_list(event_id:str, token:str, url:str=None):
     return att_list
 
 
-# returns a list of attendees with the same name
-def get_duplicates(event_id:str, token:str, url:str=None):
-    attendees = get_attendee_list(event_id, token, url)
-
-    names = []
-    dupes = []
-    for attendee in attendees:
-        name = (attendee["profile"]["first_name"], attendee["profile"]["last_name"])
-        if name not in names:
-            names.append(name)
-        else:
-            dupes.append(name)
-    return dupes
-
-
 # gets the list of questions associated with an event
 def get_question_list(event_id:str, 
                       token:str, 
@@ -90,6 +75,19 @@ def get_question_list(event_id:str,
                      for question in response["questions"]]
 
     return question_list
+
+
+# returns a list of attendees with the same name
+def get_duplicates(attendees):
+    names = []
+    dupes = []
+    for attendee in attendees:
+        name = (attendee["profile"]["first_name"], attendee["profile"]["last_name"])
+        if name not in names:
+            names.append(name)
+        else:
+            dupes.append(attendee)
+    return dupes
 
 
 # gets all the answers for a particular question/s
@@ -171,13 +169,19 @@ def get_answers_for(attendees,
 def get_number_answered(attendees,
                         expected_answer:str,
                         question_id:str=None,
-                        question_text=None):
+                        question_text=None,
+                        questions=None):
     if question_id is None and question_text is None:
         raise ValueError("must pass question_id or question_text")
     if question_id is not None and question_text is not None:
         raise ValueError("pass only question_id or question_text, not both")
 
-    answers = get_answers_for(attendees, question_id, question_text)[0]
+    if questions is not None:
+        follow_up = True
+    else:
+        follow_up = False
+
+    answers = get_answers_for(attendees, question_id, question_text, follow_up, questions)[0]
     # returns the number of people that answered as expected
     return len(list(filter(lambda s: s is not None and s.lower() == expected_answer.lower(), answers)))
 

@@ -1,6 +1,7 @@
 options.json
 .vscode/
 attendees.xlsx
+secret.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
